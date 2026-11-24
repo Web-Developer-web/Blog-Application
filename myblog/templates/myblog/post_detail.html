@@ -1,0 +1,57 @@
+{% extends "myblog/base.html" %}
+
+{% block title %}{{ post.title }} — MyBlog{% endblock %}
+
+{% block content %}
+  <article class="article">
+    <div class="card__meta-top">
+      {% if post.category %}
+        <span class="badge">{{ post.category.name }}</span>
+      {% endif %}
+      {% if post.is_featured %}
+        <span class="badge badge--featured">Featured</span>
+      {% endif %}
+      {% if post.status == "draft" %}
+        <span class="badge badge--draft">Draft</span>
+      {% endif %}
+    </div>
+
+    <h1 class="article__title">{{ post.title }}</h1>
+
+    <div class="article__meta">
+      <span>By <strong>{{ post.author.username }}</strong></span>
+      <span>{{ post.published_at|default:post.created_at|date:"M d, Y" }}</span>
+      <span>{{ post.views_count }} views</span>
+    </div>
+
+    {% if post.featured_image %}
+      <div class="article__cover">
+        <img src="{{ post.featured_image.url }}" alt="{{ post.title }}" />
+      </div>
+    {% endif %}
+
+    {% if post.short_description %}
+      <p><strong>{{ post.short_description }}</strong></p>
+    {% endif %}
+
+    <div class="article__content">{{ post.content }}</div>
+
+    {% if tag_list %}
+      <div class="tags">
+        {% for tag in tag_list %}
+          <span class="tag">#{{ tag }}</span>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="nav-actions" style="margin-top: 2rem; padding-top: 1.25rem; border-top: 1px solid var(--border);">
+      <a href="{% url 'myblog:post_list' %}" class="btn btn--ghost btn--sm">&larr; Back to Posts</a>
+      {% if user.is_authenticated and post.author == user or user.is_superuser %}
+        <a href="{% url 'myblog:post_update' post.slug %}" class="btn btn--primary btn--sm">Edit Post</a>
+        <a href="{% url 'myblog:post_delete' post.slug %}"
+           class="btn btn--danger btn--sm"
+           data-confirm-delete="{{ post.title }}">Delete</a>
+      {% endif %}
+    </div>
+  </article>
+{% endblock %}

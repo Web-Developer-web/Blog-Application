@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}MyBlog{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'myblog/css/style.css' %}" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="container navbar__inner">
+      <a href="{% url 'myblog:post_list' %}" class="brand">
+        <span class="brand__dot"></span>
+        <span>MyBlog</span>
+      </a>
+
+      <nav class="nav-actions">
+        {% if user.is_authenticated %}
+          <span class="nav-user">Hi, {{ user.username }}</span>
+          <a href="{% url 'myblog:post_create' %}" class="btn btn--primary btn--sm">+ New Post</a>
+          <a href="{% url 'admin:index' %}" class="btn btn--ghost btn--sm">Admin</a>
+        {% else %}
+          <a href="{% url 'admin:login' %}?next={{ request.path }}" class="btn btn--primary btn--sm">Author Login</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    {% if messages %}
+      <div class="alerts">
+        {% for message in messages %}
+          <div class="alert" role="alert">
+            <span>{{ message }}</span>
+            <button type="button" class="alert__close" aria-label="Dismiss">&times;</button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <script src="{% static 'myblog/js/app.js' %}"></script>
+</body>
+</html>

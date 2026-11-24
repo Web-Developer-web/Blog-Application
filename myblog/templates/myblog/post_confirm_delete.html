@@ -1,0 +1,18 @@
+{% extends "myblog/base.html" %}
+
+{% block title %}Delete Post — MyBlog{% endblock %}
+
+{% block content %}
+  <div class="form-card" style="max-width: 540px; text-align: center;">
+    <h1 class="hero__title" style="font-size: 1.5rem;">Delete Post?</h1>
+    <p class="card__excerpt" style="margin-top: 0.5rem;">
+      Are you sure you want to permanently delete <strong>"{{ post.title }}"</strong>? This action cannot be undone.
+    </p>
+
+    <form method="post" class="nav-actions" style="justify-content: center; margin-top: 1.5rem;">
+      {% csrf_token %}
+      <button type="submit" class="btn btn--danger">Yes, Delete</button>
+      <a href="{% url 'myblog:post_detail' post.slug %}" class="btn btn--ghost">Cancel</a>
+    </form>
+  </div>
+{% endblock %}
